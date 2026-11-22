@@ -1,2 +1,2 @@
 # bimm143
-My classwork from BIMM143 from UC San Diego Fall 2026
+My classwork from BIMM143 at UC San Diego Fall 2026
