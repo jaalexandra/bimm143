@@ -1,7 +1,7 @@
 ---
 title: "Class 14: Pathway Analysis from RNA-Seq Results"
 author: "Josephine Alexandra (200322329)"
-format: pdf
+format: gfm
 ---
 
 ## Section 1. Differential Expression Analysis
