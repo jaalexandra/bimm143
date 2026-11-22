@@ -1,0 +1,249 @@
+---
+title: "Class 06 R Functions"
+author: "Josephine Alexandra (200322329)"
+format: pdf
+toc: true
+---
+
+## Background
+
+All functions in R have at least 3 things:
+
+- a *name* (we pick that and use it to call the function)
+- input *arguments* (one or more comma separated inputs that go inside the.brackets when we call the function)
+- the *body* (the lines of R code that do the work of the function)
+
+## A first function
+
+Here we will create a function 'add()'' to add numbers together
+
+> **Q1a.** Your first version of the function should add two input numbers together. For example, add(4,7) should return 11. \[1 pt\]
+
+```{r}
+add <- function(x, y=0) {x + y}
+```
+
+## Let's test our new function
+
+```{r}
+add(4,7)
+```
+
+```{r}
+add(10)
+```
+
+```{r}
+add <- function(x, y=0, z=0) {x + y + z}
+```
+
+```{r}
+add(1,10,100)
+```
+
+> **Q1b.** For your second version, adapt your first function so it can take a single input vector or two inputs as before.
+
+```{r}
+add <- function(x, y=0) {sum(x + y)}
+```
+
+```{r}
+add(c(4,7,10))
+```
+
+```{r}
+add(4,7)
+```
+
+> **Q1c.** Finally, on your own (outside of class) create a third version of your function that can add any number of inputs that the user provides.
+
+```{r}
+add <- function(...) {sum(...)}
+```
+
+```{r}
+add(1,2,3,-4)
+```
+
+## A generate DNA function
+
+> \*\*Q2a. Write a function generate_dna() that returns a random DNA sequence of a length specified by the user. Your first version should return a multi-element vecotr of
+
+Useful base R functions that you may (or may not) find useful for this lab include: 'sample()', 'paste()', 'paste0()', 'if()', 'for()', 'sapply()'. 'nchar()', and 'cat()'.
+
+The 'sample()' function looks useful. There are two **required arguments** ( i.e. inputs I must give that don't have a default value)
+
+```{r}
+sample(x=1:10, size=4)
+```
+
+We can use this with "A" "C" "G" and "T" as input x to make random nucleotide sequences
+
+```{r}
+sample(x=c("A","C","G","T"), size=15, replace=TRUE)
+```
+
+Cool! We have a working snippet of code that does something useful! This can serve as the "body" of our first 'generate_dna()' function.
+
+```{r}
+generate_dna <- function(len) {sample(x=c("A","C","G","T"), size=len, replace=TRUE)}
+```
+
+```{r}
+generate_dna(6)
+```
+
+> **Q2b.** Your second version should optionally be able to return either a multi-element vector of single character nucleotides (as before) or a single character string (not a vector of single letters but a singe vector of multiple letters). For example "AAGGCTG". \[1 pt\]
+
+The functions 'paste()', 'paste0()' and 'if'()' might be useful here...
+
+```{r}
+paste(c("A","C","A"), collapse = "")
+```
+
+```{r}
+flag <- FALSE
+if(flag) {cat("Look at me! We are in here"
+)} else {cat("Nooo!")}
+```
+
+Let's combine these two things into our new improved function:
+
+```{r}
+generate_dna <- function(len, collapse=FALSE) {
+  
+  # Multi-element nucleotide vector
+  s <- sample(x=c("A","C","G","T"), size=len, replace=TRUE)
+
+  if(collapse) {
+  # Make a single element vector
+  s <- paste(s, collapse = "")
+  #cat("You picked TRUE!!")
+  }
+  return(s)
+}
+```
+
+```{r}
+generate_dna(6, collapse = F)
+generate_dna(6, collapse = T)
+generate_dna(6)
+```
+
+> **Q2c.** Finally, create a final version of your function that prints out a FASTA format sequence with an id line indicating the sequence length.
+
+```{r}
+len <- 90
+paste(">length", len, sep="")
+```
+
+```{r}
+generate_dna <- function(len, fasta=FALSE) {
+  
+  # Multi-element nucleotide vector
+  s <- sample(x=c("A","C","G","T"), size=len, replace=TRUE)
+
+  if(fasta) {
+    # Make a single element vector
+    s <- paste(s, collapse = "")
+
+    # Add a FASTA >id line
+    id <- paste(">length", len, sep="")
+    s <- paste (id,s, sep="\n")
+    cat(s)
+  }
+  return(s)
+}
+```
+
+```{r}
+x <- generate_dna(10, fasta=T)
+```
+
+## A new generate protein function
+
+> **Q3.** Write a function generate_protein() that returns a random peptide/protein sequence of a length specified by the user. For example generate_protein(6) might return "WQRTAG".
+
+```{r}
+generate_protein <- function(len, fasta=FALSE) {
+  
+  # The 20 standard amino acids
+  aa <- c("A","R","N","D","C","E","Q","G","H","I","L","L","M","F","P","S","T","W","Y","V")
+  
+  # Multi-element amino-acid vector
+  s <- sample(x=aa, size=len, replace=TRUE)
+
+  if(fasta) {
+    # Make a single element vector
+    s <- paste(s, collapse = "")
+
+    # Add a FASTA >id line
+    id <- paste(">length", len, sep="")
+    s <- paste (id,s, "\n", sep="\n")
+    cat(s)
+  }
+  return(s)
+}
+```
+
+```{r}
+generate_protein(6, fasta=T)
+```
+
+> **Q4.** Adapt and use your generate_protein() function to generate a series of random protein sequences ranging from 6 to 13 amino acids in length (one sequence per length). Take advantage of the base R function for() or sapply() so that you do not have to call generate_protein() eight times by hand.
+
+```{r}
+x <- generate_protein(6, fasta=T)
+x <- generate_protein(7, fasta=T)
+x <- generate_protein(8, fasta=T)
+x <- generate_protein(9, fasta=T)
+x <- generate_protein(10, fasta=T)
+x <- generate_protein(11, fasta=T)
+x <- generate_protein(12, fasta=T)
+x <- generate_protein(13, fasta=T)
+```
+
+We can do this with a 'for()' loop
+
+```{r}
+for(i in 1:10) {cat(i, "\n")}
+```
+
+```{r}
+for(len in 6:13)
+x <- generate_protein(len, fasta=1)
+```
+
+We can do this with a 'for()' loop. A 'for()' loop iterates over each elemnt
+
+```{r}
+sapply(3:13, generate_protein, fasta=T)
+```
+
+## BLASTp search against nr - are our peptides "unique in nature"?
+
+> **Q5.** Take your FASTA-formatted peptides from Q4 and run them as a single BLASTp search against the Non-redundant protein sequences (nr) database at https://blast.ncbi.nlm.nih.gov/.
+
+| Length | \% Coverage | \% Identity | Unique (Y/N) |
+|--------|-------------|-------------|--------------|
+| 6      | 100         | 100         | N            |
+| 7      | 100         | 100         | N            |
+| 8      | 100         | 100         | N            |
+| 9      | 100         | 88.89       | Y            |
+| 10     | 100         | 90          | Y            |
+| 11     | 82          | 88.89       | Y            |
+| 12     | 75          | 100         | Y            |
+| 13     | 92          | 75          | Y            |
+
+> **Q5a.** At which sequence length do your randomly generated peptides start to look “unique in nature” (i.e. no 100% coverage + 100% identity hit)? 
+
+Length 9
+
+> **Q5b.** Speculate why very short random peptides are almost always found in nr, while longer ones typically are not. Your answer should refer both to the size of the sequence space (20𝐿 for a peptide of length 𝐿) and to the size of the known protein universe.
+
+Very short random peptides are almost always found in nr because their sequence space (e.g., 20^6 = 64 million possible sequences) is small enough to be fully sampled by chance within the massive size of the known protein universe, whereas longer random peptides are rarely found because their sequence space (e.g., 20^9 = 512 billion possible sequences) exceeds the total number of existing sequences, making random matches highly improbable.
+
+> **Q6.** In 3–6 sentences total and using your Q5 data and the reasoning from Q5b, what do you think this minimum length is and why might it be a bad design choice for the immune system to present very short peptides?
+
+The minimum length is 9 amino acids. Very short peptides are a bad design choice because if the adaptive immune system relies on very short peptides (e.g., length 6-8) to recognize foreign pathogens, these short sequences would almost always 
+match self-proteins due to the small sequence space saturating the proteome. Because self-proteins and non-self-proteins would frequently share these short sequences, the immune system would constantly trigger autoimmune responses or fail to distinguish self from non-self. On the other hand, longer peptides have a large enough sequence space that random matches to self are minimized, allowing for specific and reliable pathogen detection.
