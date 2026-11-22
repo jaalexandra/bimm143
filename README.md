@@ -1,2 +1,3 @@
 # bimm143
-My classwork from BIMM143 at UC San Diego Fall 2026
+This repo is for my UCSD bioinformatics class.
+
